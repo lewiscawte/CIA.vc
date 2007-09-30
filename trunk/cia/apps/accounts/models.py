@@ -2,6 +2,7 @@ from django.db import models
 from django.conf import settings
 from django.utils.html import escape
 from django.contrib.auth.models import User
+from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
 import django.newforms as forms
 from django.newforms.util import smart_unicode, StrAndUnicode
@@ -74,7 +75,7 @@ class UserAsset(models.Model):
 
     content_type = models.ForeignKey(ContentType)
     object_id = models.PositiveIntegerField()    
-    asset = models.GenericForeignKey()
+    asset = generic.GenericForeignKey()
 
     access = models.PositiveSmallIntegerField(choices = access_choices,
                                               default = ACCESS.COMMUNITY)
@@ -188,7 +189,7 @@ class AssetChangeset(models.Model):
 
     content_type = models.ForeignKey(ContentType)
     object_id = models.PositiveIntegerField(db_index=True)
-    asset = models.GenericForeignKey()
+    asset = generic.GenericForeignKey()
 
     def __str__(self):
         return "Change %d for %s by %s" % (self.id, self.asset, self.user)
@@ -434,7 +435,7 @@ class AssetManager(models.Manager):
 
 class Project(StrAndUnicode, models.Model):
     objects = AssetManager()
-    assets = models.GenericRelation(UserAsset)
+    assets = generic.GenericRelation(UserAsset)
     target = models.ForeignKey(StatsTarget)
 
     repos = models.ForeignKey(Repository, null=True)
@@ -457,7 +458,7 @@ class Project(StrAndUnicode, models.Model):
 
 class Author(StrAndUnicode, models.Model):
     objects = AssetManager()
-    assets = models.GenericRelation(UserAsset)
+    assets = generic.GenericRelation(UserAsset)
     target = models.ForeignKey(StatsTarget)
 
     def __unicode__(self):
@@ -541,7 +542,7 @@ def clean_up_text(text,
 
 class Bot(models.Model):
     objects = AssetManager()
-    assets = models.GenericRelation(UserAsset)
+    assets = generic.GenericRelation(UserAsset)
 
     network = models.ForeignKey(Network)
     location = models.CharField(maxlength=64, db_index=True)
