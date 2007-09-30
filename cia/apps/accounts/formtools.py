@@ -6,7 +6,7 @@ class MultiForm:
         self.is_valid = lambda: True
         self.POST = POST
         self.data = {}
-        self.clean_data = {}
+        self.cleaned_data = {}
         self.errors = {}
         self._bound = {}
 
@@ -35,11 +35,11 @@ class MultiForm:
         self.is_valid = lambda _=(self.is_valid() and inst.is_valid()): _
         self.errors.update(inst.errors)
         self.data.update(inst.data.items())
-        if hasattr(inst, 'clean_data'):
-            self.clean_data.update(inst.clean_data.items())
+        if hasattr(inst, 'cleaned_data'):
+            self.cleaned_data.update(inst.cleaned_data.items())
 
     def is_valid(self):
-        return bool(self.clean_data)
+        return bool(self.cleaned_data)
 
     def __getitem__(self, name):
         return self._bound[name]

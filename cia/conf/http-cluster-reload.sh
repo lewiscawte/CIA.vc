@@ -11,7 +11,7 @@ for port in 3930 3931 3932 3933; do
     sleep 5
 
     echo Starting $port
-    twistd2.4 -oy conf/official.web.tac \
+    twistd -oy conf/official.web.tac \
         -l $LOGDIR/server-$PORT.log --pidfile=$pidfile
 
     echo ...

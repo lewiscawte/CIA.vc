@@ -11,5 +11,5 @@ for line in os.popen("ps -eo pid,lstart,args"):
         start_time = time.mktime(time.strptime(' '.join(tok[1:6])))
 	runtime = time.time() - start_time
 
-        if runtime > 600:
+        if runtime > 120:
             os.kill(pid, 9)

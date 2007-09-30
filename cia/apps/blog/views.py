@@ -107,13 +107,13 @@ def detail(request, year=None, month=None, slug=None):
             post_form = EditPostForm(model)
 
             if post_form.is_valid():
-                post.content = post_form.clean_data['content']
-                post.title = post_form.clean_data['title']
+                post.content = post_form.cleaned_data['content']
+                post.title = post_form.cleaned_data['title']
 
                 # Bump the publication date if we're transitioning from draft to listed.
-                if (not post.pub_date) or (post_form.clean_data['listed'] and not post.listed):
+                if (not post.pub_date) or (post_form.cleaned_data['listed'] and not post.listed):
                     post.pub_date = datetime.datetime.now()
-                post.listed = post_form.clean_data['listed']
+                post.listed = post_form.cleaned_data['listed']
 
                 # Update the slug if the post is unlisted
                 if (not post.slug) or (not post.listed):
@@ -158,7 +158,7 @@ class BlogFeed(Feed):
         return item.pub_date
 
 def blog_feed(request):
-    f = BlogFeed('blog', request.path).get_feed()
+    f = BlogFeed('blog', request).get_feed()
     response = HttpResponse(mimetype = f.mime_type)
     f.write(response, 'utf-8')
     return response
@@ -189,7 +189,7 @@ class CommentFeed(Feed):
 
 
 def comment_feed(request):
-    f = CommentFeed('comment', request.path).get_feed()
+    f = CommentFeed('comment', request).get_feed()
     response = HttpResponse(mimetype = f.mime_type)
     f.write(response, 'utf-8')
     return response
