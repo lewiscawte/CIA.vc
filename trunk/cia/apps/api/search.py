@@ -36,6 +36,9 @@ def search(request, limit=10):
     # Prepare UTF-8, Unicode, and ASCII versions of the query
     #
     query = request.GET.get("q")
+    if not query:
+        return { 'results': [] }
+
     assert isinstance(query, unicode)
     utf8Query = query.encode('utf8')    
     try:
