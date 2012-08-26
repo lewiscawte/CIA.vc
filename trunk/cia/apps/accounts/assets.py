@@ -493,9 +493,11 @@ class ProjectForm(forms.Form):
             # Note that probe() does not explicitly save() the
             # repository, but these changes will be saved automatically
             # by our changeset since we touched repos.is_active.
+            #
+            # XXX - Bear hack: see clean_location below
 
-            if repos.location:
-                repos.get_client().probe()
+            #if repos.location:
+            #    repos.get_client().probe()
 
 class RepositoryForm(forms.Form):
     location = forms.CharField(
@@ -528,7 +530,11 @@ class RepositoryForm(forms.Form):
         # the changeset.
 
         location = self.cleaned_data['location']
-        if location != self.data.model.location:
+        # XXX - Bear hack: Unconditionally probe, so if we reactivated
+        # the repository we don't pull all revisions since way back when.
+        # Also makes sure the location is still valid.
+        #if location != self.data.model.location:
+        if location: # shouldn't be neccessary, required = True
             self.data.model.get_client().probe(location)
         return location
 
